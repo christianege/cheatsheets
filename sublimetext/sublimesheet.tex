@@ -1,0 +1,242 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[10pt,a4paper,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{ stmaryrd }
+\usepackage{tikz}
+\usetikzlibrary{shadows, calc}
+
+%\usepackage[table]{xcolor}
+
+% Sublime Text 2 cheat sheet
+
+% This sheet is meant to be compiled with pdflatex.
+
+% This code is based on the LaTeX cheat sheet found here :
+% http://www.stdout.org/~winston/latex/
+% by Winston Chang
+
+% Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+% Setting the margins at 1cm everywhere
+\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} 
+
+% Turn off header and footer
+\pagestyle{empty}
+ 
+\makeatletter
+
+\newcommand{\vcenteredinclude}[2]{\begingroup
+\setbox0=\hbox{\includegraphics[#2]{#1}}%
+\parbox{\wd0}{\box0}\endgroup}
+
+\newcommand*\keystroke[1]{%
+  \tikz[baseline=(key.base)]
+    \node[%
+      draw,
+      fill=white,
+      drop shadow={shadow xshift=0.25ex,shadow yshift=-0.25ex,fill=black,opacity=0.75},
+      rectangle,
+      rounded corners=2pt,
+      inner sep=1pt,
+      line width=0.5pt,
+      font=\scriptsize\sffamily
+    ](key) {~#1~\strut}
+  ;
+}
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\titleformat{\section}[block]%              
+    {\tikz[overlay] \shade[left color=gray!10,right color=gray] (0,-1ex) rectangle (\linewidth,1.5em); \Large}%    
+    {\thesection}%                   
+    {1em}%
+    {}
+
+\titleformat{\subsection}[block]%              
+    {\large}%    
+    {\thesubsection}%                   
+    {1em}%
+    {}
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+%\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\ret}{\keystroke{$\hookleftarrow$}}
+\newcommand{\shift}{\keystroke{$\Uparrow~$}}
+\newcommand{\alt}{\keystroke{Alt}}
+\newcommand{\up}{\keystroke{$\uparrow$}}
+\newcommand{\down}{\keystroke{$\downarrow$}}
+\newcommand{\bkspc}{\keystroke{$\longmapsfrom$}}
+\newcommand{\ctrl}[1]{\texttt{\keystroke{Ctrl}#1}}
+
+\raggedright
+\footnotesize
+\begin{multicols}{3}
+
+\begin{center}
+     \vcenteredinclude{sublime_text.png}{width=32pt}\Large{\textbf{ublime Text 2 Cheat Sheet}} \\
+\end{center}
+
+\rowcolors{1}{gray!20}{white}
+
+All the commands of Sublime Text 2 can be accessed from the command palette.
+
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\shift \keystroke{p}} & \textbf{Command palette}
+\end{tabular}
+
+\section{Goto Anywhere}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{p}}  & Go to file \\
+\ctrl{\keystroke{r}}  & Go to symbol (\verb|@|) \\
+\ctrl{\keystroke{;}}  & Go to word  (\verb|#|)\\
+\ctrl{\keystroke{g}}  & Go to line number (\verb|:|) \\
+\end{tabular}
+
+\section{Editing}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{X}} & Delete line \\
+\ctrl{\ret} & Insert line after \\
+\ctrl{\shift \ret} & Insert line before \\
+\ctrl{\shift \up}  & Move line/selection up \\
+\ctrl{\shift \down}  & Move line/selection down \\
+\ctrl{\keystroke{K}, \keystroke{K}} & Delete from cursor to end of line \\
+\ctrl{\keystroke{K}, \bkspc} & Delete from cursor to start of line \\
+\ctrl{\keystroke{]}} & Indent current line(s) \\
+\ctrl{\keystroke{[}} & Unindent current line(s) \\
+\ctrl{\shift \keystroke{D}} & Duplicate line(s) \\
+\ctrl{\keystroke{/}} & (Un)comment current line \\
+\ctrl{\shift \keystroke{/}} & Block (un)comment current selection \\
+\ctrl{\keystroke{Y}} & Repeat last keyboard command \\
+\ctrl{\shift \keystroke{V}} & Paste and indent correctly \\
+\ctrl{\keystroke{~~Space~~}} & Select next auto-completion suggestion \\
+\ctrl{\keystroke{K}, \keystroke{U}}  & Uppercase \\
+\ctrl{\keystroke{K}, \keystroke{L}}  & Lowercase \\
+\end{tabular}
+
+\section{Selection}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{L}} & Select line --- Repeat to select next lines \\
+\ctrl{\keystroke{D}} & Select word --- Repeat to select other occurrences \\
+\ctrl{\shift \keystroke{M}} & Select all contents of the current parentheses \\
+\alt \shift \up & Insert selection cursor one line up \\
+\alt \shift \down & Insert selection cursor one line down \\
+\end{tabular}
+
+You can select a rectangular section by using \shift, then holding the right mouse button and dragging over the area you wish to select. You can add or remove part of the selection using modifiers keys and using the same technique.
+
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\alt & Remove from selection \\
+\ctrl{} & Add to selection \\
+\end{tabular}
+
+\section{Navigation}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{M}} & Jump to closing parentheses --- Repeat to go to opening parentheses \\
+\ctrl{\keystroke{U}} & Jump to your last change --- Repeat to undo change \\
+\end{tabular}
+
+\subsection{Bookmarks}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{F2}}  & Toggle bookmark \\
+\keystroke{F2} & Next bookmark \\
+\shift \keystroke{F2} & Previous bookmark \\
+\ctrl{\shift \keystroke{F2}} & Clear bookmarks
+\end{tabular}
+
+\subsection{Tabs}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{PgUp}}  & Previous tab \\
+\ctrl{\keystroke{PgDn}}  & Next tab \\
+\texttt{\alt \keystroke{[NUM]}} & Switch to tab number [NUM] \\
+\end{tabular}
+
+\section{Find/Replace}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{f}}  & Find \\
+\ctrl{\keystroke{h}}  & Replace \\
+\ctrl{\shift \keystroke{f}}  & Find in files \\
+\end{tabular}
+
+\section{General}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{K}, \keystroke{B}}  & Toggle side bar \\
+\ctrl{\shift \alt \keystroke{P}}  & Show scope in status bar \\
+\end{tabular}
+
+\section{Packages}
+\subsection{Alignement}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\alt \keystroke{A}} & Align selected lines
+\end{tabular}
+
+\subsection{Sublime Files}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\keystroke{Super}\keystroke{N}} & Open file navigator
+\end{tabular}
+
+\subsection{SublimeCodeIntel}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\keystroke{Super} \keystroke{F3} & \\
+\alt \texttt{click} & Jump to symbol definition \\
+\end{tabular}
+
+\subsection{Origami}
+Use \ctrl{\keystroke{K}}, then use \ctrl{\keystroke{arrows}} with modifiers :
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\texttt{no modifier} & Travel to adjacent pane \\
+\shift & Carry the current file to destination \\
+\alt & Clone the current file to destination \\
+\keystroke{Super} & Create an adjacent pane \\
+\keystroke{Super}\shift & Destroy an adjacent pane \\
+\end{tabular}
+
+\subsection{Wrap Plus}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\alt \keystroke{Q} & Wrap selection \\
+\end{tabular}
+
+
+\subsection{LaTeXTools}
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\shift \keystroke{Super}\up & Exponent with braces \\
+\shift \keystroke{Super}\down & Subscript with braces \\
+\end{tabular}
+
+\subsection{Hex Viewer}
+Use \ctrl{\shift \keystroke{B}}, then :
+\begin{tabular}{p{3cm}p{\linewidth - 3.9cm}}
+\ctrl{\shift \keystroke{H}} & Toggle hex editor mode \\
+\ctrl{\shift \keystroke{I}} & Show hex inspector \\
+\ctrl{\shift \keystroke{F}} & Hex finder \\
+\ctrl{\shift \keystroke{E}} & Hex editor \\
+\ctrl{\shift \keystroke{X}} & Hex writer \\
+\ctrl{\shift \keystroke{U}} & Discard edits \\
+\ctrl{\shift \keystroke{=}} & Hex checksum \\
+\ctrl{\shift \keystroke{-}} & Hash selection \\
+\ctrl{\shift \keystroke{G}} & Hash evaluation \\
+\end{tabular}
+
+\rule{\linewidth}{0.25pt}
+\scriptsize
+
+Copyright \copyright\ 2012 Bastien Gorissen
+
+http://www.gsmproductions.org/misc/sublime.html
+
+\end{multicols}
+\end{document}
