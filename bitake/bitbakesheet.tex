@@ -1,0 +1,156 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[10pt,a4paper,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{ stmaryrd }
+\usepackage{tikz}
+\usepackage[T1]{fontenc}
+\usetikzlibrary{shadows, calc}
+
+%\usepackage[table]{xcolor}
+
+% Bitbake cheat sheet
+
+% This sheet is meant to be compiled with pdflatex.
+
+% This code is based on the LaTeX cheat sheet found here :
+% http://www.stdout.org/~winston/latex/
+% by Winston Chang
+
+% Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+% Setting the margins at 1cm everywhere
+\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} 
+
+% Turn off header and footer
+\pagestyle{empty}
+ 
+\makeatletter
+
+\newcommand{\vcenteredinclude}[2]{\begingroup
+\setbox0=\hbox{\includegraphics[#2]{#1}}%
+\parbox{\wd0}{\box0}\endgroup}
+
+\newcommand*\keystroke[1]{%
+  \tikz[baseline=(key.base)]
+    \node[%
+      draw,
+      fill=white,
+      drop shadow={shadow xshift=0.25ex,shadow yshift=-0.25ex,fill=black,opacity=0.75},
+      rectangle,
+      rounded corners=2pt,
+      inner sep=1pt,
+      line width=0.5pt,
+      font=\scriptsize\sffamily
+    ](key) {~#1~\strut}
+  ;
+}
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\titleformat{\section}[block]%              
+    {\tikz[overlay] \shade[left color=gray!10,right color=gray] (0,-1ex) rectangle (\linewidth,1.5em); \Large}%    
+    {\thesection}%                   
+    {1em}%
+    {}
+
+\titleformat{\subsection}[block]%              
+    {\large}%    
+    {\thesubsection}%                   
+    {1em}%
+    {}
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+%\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\ret}{\keystroke{$\hookleftarrow$}}
+\newcommand{\shift}{\keystroke{$\Uparrow~$}}
+\newcommand{\alt}{\keystroke{Alt}}
+\newcommand{\up}{\keystroke{$\uparrow$}}
+\newcommand{\down}{\keystroke{$\downarrow$}}
+\newcommand{\bkspc}{\keystroke{$\longmapsfrom$}}
+\newcommand{\ctrl}[1]{\texttt{\keystroke{Ctrl}#1}}
+
+\raggedright
+\footnotesize
+\begin{multicols}{2}
+
+\begin{center}
+     \Large{\textbf{Bitbake Cheat Sheet}} \\
+\end{center}
+
+\rowcolors{1}{gray!20}{white}
+
+\section{Command Line options}
+
+\begin{tabular}{p{5cm}p{\linewidth - 5.9cm}}
+-c \textless task \textgreater & execute \textless task \textgreater for the image or recipe being built. ex: bitbake -c fetch busybox. Some of the possible tasks are: fetch, configure, compile, package, clean \\
+-f & force execution of the operation, even if not required \\
+-v & show verbose output \\
+-DDD & show lots of debug information \\
+-s & show recipe version information \\
+--help & get usage help \\
+-c listtasks \textless image-or-recipe-name \textgreater & show the tasks associated with an image or individual recipe \\
+-g \textless recipe \textgreater & output dependency tree in graphviz format \\
+\end{tabular}
+
+\section{Usefull commands}
+\begin{tabular}{p{5cm}p{\linewidth - 5.9cm}}
+bitbake foo & this builds package foo \\
+bitbake -c clean foo & This command will clean up your tmp dir for the given package. It is very useful if you work on a new .bb recipe. Without it your changes to the recipe may not work. \\
+bitbake -f -c compile foo & To recompile your source code if you change a line in it. \\
+bitbake -s | grep foo & Check the version of the recipe \\
+bitbake -c devshell \textless target \textgreater &  opens the interactive devshell in the source directory of target, this is usefull for debugging build failures \\
+bitbake virtual/kernel -c menuconfig & Interactive kernel configuration \\
+bitbake \textless image \textgreater -c fetchall & Fetch all sources for that particular image. This should be execute before a long running build.
+
+
+\end{tabular}
+
+\section{.bb file syntax}
+\begin{tabular}{p{5.5cm}p{\linewidth - 6.4cm}}
+VAR = ``foo'' & simple assignment \\
+VAR ?= ``foo'' & assign if no other value is already assigned (default assignment) \\
+VAR ??=``foo'' & weak default assignment, takes lower precedence than ?= \\
+VAR = ``stuff \$\{OTHER\_VAR\} more'' &  variable expansion, OTHER\_VAR expanded at time of reference to VAR \\
+VAR := ``stuff \$\{OTHER\_VAR\} more'' & immediate variable expansion, OTHER\_VAR expanded at time of parsing this line  \\
+VAR += ``foo'' & append with space \\
+VAR =+ ``foo'' & prepend with space \\
+VAR .= ``foo'' & append without space \\
+VAR =. ``foo'' & prepend without space \\
+VAR\_append = ``foo'' & append without space \\
+VAR = ``foo \$\{@\textless line-of-python-code \textgreater\}'' & python code expansion, ex: VAR = ``the date is: \$\{@time.strftime(`\%Y\%m\%d',time.gmtime())\}'' \\
+include foo & include file, include file named ``foo'', search BBPATH \\
+require [\textless path\textgreater]foo & require file, include file named ``foo'', failing if not found exactly where specified \\
+inherit foo & inherit classes, include definitions from foo.bbclass \\
+do\_sometask() \{   \textless shell code\textgreater  \}  & define a task using shell code \\
+python do\_sometask \{ \textless python code\textgreater  \}  & define a task using python code \\
+addtask sometask (before|after) other\_task & add a task, adds a defined task to the list of tasks, with the ordering specified. Zero or more ``before'' or ``after'' clauses can be used. \\
+VAR[some\_flag]=``foo'' & associate a subsidiary flag value to a variable, a few subsidiary flag value names are well-defined: ``dirs'', ``cleandirs'', ``noexec'', ``nostamp'', ``fakeroot'', ``umask'', ``deptask'', ``rdeptask'', ``recdeptask'', ``recrdeptask''
+Flag values appear to be used exclusively with task definitions (i.e. do\_sometask)
+\end{tabular}
+
+
+
+\rule{\linewidth}{0.25pt}
+\scriptsize
+
+Copyright \copyright\ 2014 Christian Ege
+
+%http://www.gsmproductions.org/misc/sublime.html
+
+\end{multicols}
+\end{document}
