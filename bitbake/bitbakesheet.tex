@@ -9,8 +9,13 @@
 \usepackage{ stmaryrd }
 \usepackage{tikz}
 \usepackage[T1]{fontenc}
+\usepackage{hyperref}
 \usetikzlibrary{shadows, calc}
 
+\hypersetup{
+    colorlinks=false,
+    pdfborder={0 0 0},
+}
 %\usepackage[table]{xcolor}
 
 % Bitbake cheat sheet
@@ -24,11 +29,11 @@
 % Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 
 % Setting the margins at 1cm everywhere
-\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} 
+\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm}
 
 % Turn off header and footer
 \pagestyle{empty}
- 
+
 \makeatletter
 
 \newcommand{\vcenteredinclude}[2]{\begingroup
@@ -59,15 +64,15 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
-\titleformat{\section}[block]%              
-    {\tikz[overlay] \shade[left color=gray!10,right color=gray] (0,-1ex) rectangle (\linewidth,1.5em); \Large}%    
-    {\thesection}%                   
+\titleformat{\section}[block]%
+    {\tikz[overlay] \shade[left color=gray!10,right color=gray] (0,-1ex) rectangle (\linewidth,1.5em); \Large}%
+    {\thesection}%
     {1em}%
     {}
 
-\titleformat{\subsection}[block]%              
-    {\large}%    
-    {\thesubsection}%                   
+\titleformat{\subsection}[block]%
+    {\large}%
+    {\thesubsection}%
     {1em}%
     {}
 % -----------------------------------------------------------------------
@@ -105,9 +110,10 @@
 --help & get usage help \\
 -c listtasks \textless image-or-recipe-name \textgreater & show the tasks associated with an image or individual recipe \\
 -g \textless recipe \textgreater & output dependency tree in graphviz format \\
+-e &  Show the global or per-package environment
 \end{tabular}
 
-\section{Usefull commands}
+\section{Useful commands}
 \begin{tabular}{p{5cm}p{\linewidth - 5.9cm}}
 bitbake foo & this builds package foo \\
 bitbake -c clean foo & This command will clean up your tmp dir for the given package. It is very useful if you work on a new .bb recipe. Without it your changes to the recipe may not work. \\
@@ -115,7 +121,8 @@ bitbake -f -c compile foo & To recompile your source code if you change a line i
 bitbake -s | grep foo & Check the version of the recipe \\
 bitbake -c devshell \textless target \textgreater &  opens the interactive devshell in the source directory of target, this is usefull for debugging build failures \\
 bitbake virtual/kernel -c menuconfig & Interactive kernel configuration \\
-bitbake \textless image \textgreater -c fetchall & Fetch all sources for that particular image. This should be execute before a long running build.
+bitbake \textless image \textgreater -c fetchall & Fetch all sources for that particular image. This should be execute before a long running build \\
+bitbake -e \textless target \textgreater | grep SRC\_REV & Check the content of any variable the recipe \textit{target}\\
 
 
 \end{tabular}
@@ -144,13 +151,17 @@ Flag values appear to be used exclusively with task definitions (i.e. do\_someta
 \end{tabular}
 
 
+\section{Useful variables}
+\begin{tabular}{p{5.5cm}p{\linewidth - 6.4cm}}
+INHERIT += rm\_work & Removes source and temporary files after a successfull build. This saves disk space.
+\end{tabular}
 
 \rule{\linewidth}{0.25pt}
 \scriptsize
 
-Copyright \copyright\ 2014 Christian Ege
+Copyright \copyright\ 2014 Christian Ege \textless\textless \href{http://cybertux.github.io/cheatsheets}{Fork me on Github}.\textgreater \textgreater
 
-%http://www.gsmproductions.org/misc/sublime.html
+%
 
 \end{multicols}
 \end{document}
